@@ -1,0 +1,12 @@
+﻿@model ImportFile
+
+@{
+//TODO: Warum ist das nicht partial
+}
+
+<form asp-action="Import" enctype="multipart/form-data">
+
+    <input asp-for="JsonFile" />
+
+    <input type="submit" />
+</form>

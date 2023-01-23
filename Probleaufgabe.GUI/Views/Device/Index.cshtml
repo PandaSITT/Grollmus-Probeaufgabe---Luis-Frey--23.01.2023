@@ -4,25 +4,23 @@
     ViewData["Title"] = "View";
 }
 
-@{
-    //TODO: Import Button
-}
+<div style="float: right;">
+    <a href="@Url.ActionLink("Import")" class="btn btn-dark">Import</a>
+</div>
 
 <div>
     @if (Model.Count > 0)
     {
         foreach (var device in Model)
         {
-            // TODO: Click
-            <div class="card" style="width: 18rem; float: left; margin: 5px;" onclick="location.href='/Device/Details'">
-                <div class="card-body">
+            <div class="card" style="width: 18rem; float: left; margin: 5px;" onclick="location.href='@Url.ActionLink("Details", "Device", new {id = device.id} )'">
+                <div class="card-body" style="position: relative;">
+                    <div class="sticky-top-right">
+                        <a href="@Url.ActionLink("DeleteDevice", "Device", new {id = device.id})" class="fa-solid fa-trash" style="position: sticky; top: 5px; right: 5px; color: black"></a>
+                    </div>
                     <h4>@device.name</h4>
                     <p>Device Typ ID: @device.deviceTypeId</p>
                     <p>Failsafe: @Html.Raw(AdditionalHtmlHelper.BoolToIcon(device.failsafe))</p>
-                    @{
-                        // TODO: Lösch Button
-                        // <i class="fa-solid fa-trash"></i>
-                    }
                 </div>
             </div>
         }

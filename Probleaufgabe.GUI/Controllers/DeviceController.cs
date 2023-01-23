@@ -2,35 +2,67 @@
 using Probleaufgabe.GUI.Models;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Probleaufgabe.GUI.Controllers
 {
     public class DeviceController : Controller
     {
-        private readonly ILogger<DeviceController> _logger;
+        private readonly ILogger<DeviceController> logger;
 
-        public DeviceController(ILogger<DeviceController> logger)
+        private readonly HttpClient httpClient;
+
+        public DeviceController(ILogger<DeviceController> logger, HttpClient httpClient)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.httpClient = httpClient;
+            //TODO: konfigurierbar machen
+            this.httpClient.BaseAddress = new Uri("https://localhost:7090/api/");
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            string jsonString = "{\"devices\":[{\"id\":\"1glmLrTZqf9YZleN\",\"name\":\"S7-150009\",\"deviceTypeId\":\"Beweis\",\"failsafe\":true,\"tempMin\":0,\"tempMax\":60,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":true,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0},{\"id\":\"1glmLrTZqf9YZleN\",\"name\":\"S7-1500\",\"deviceTypeId\":\"S7_1500\",\"failsafe\":true,\"tempMin\":0,\"tempMax\":50,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":false,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0,\"advancedEnvironmentalConditions\":false},{\"id\":\"9RLMugEpCVSeemZ5\",\"name\":\"ET 200SP\",\"deviceTypeId\":\"ET200_SP\",\"failsafe\":false,\"tempMin\":0,\"tempMax\":40,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":false,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0,\"terminalElement\":true,\"advancedEnvironmentalConditions\":false},{\"id\":\"9RLMugEbCVSeemZ4\",\"name\":\"S7-300\",\"deviceTypeId\":\"S7_300\",\"failsafe\":true,\"tempMin\":0,\"tempMax\":40,\"installationPosition\":\"vertical\",\"insertInto19InchCabinet\":false,\"motionEnable\":false,\"siplusCatalog\":false,\"simaticCatalog\":false,\"rotationAxisNumber\":0,\"positionAxisNumber\":0,\"terminalElement\":true,\"advancedEnvironmentalConditions\":false}]}";
+            var devices = await httpClient.GetFromJsonAsync<List<Device>>("Device");
 
-            JsonDevices myDeserializedClass = JsonConvert.DeserializeObject<JsonDevices>(jsonString);
-
-            return View(myDeserializedClass.devices);
+            return View(devices);
         }
 
-        public IActionResult Details()
+        public async Task<IActionResult> Details(string id)
         {
-            string jsonString = "{\"id\":\"1glmLrTZqf9YZleN\",\"name\":\"S7-150009\",\"deviceTypeId\":\"Beweis\",\"failsafe\":true,\"tempMin\":0,\"tempMax\":60,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":true,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0}";
-            string jsonString2 = "{\"id\":\"9RLMugEpCVSeemZ5\",\"name\":\"ET 200SP\",\"deviceTypeId\":\"ET200_SP\",\"failsafe\":false,\"tempMin\":0,\"tempMax\":40,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":false,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0,\"terminalElement\":true,\"advancedEnvironmentalConditions\":false}";
+            var device = await httpClient.GetFromJsonAsync<Device>($"Device/{id}");
 
-            Device myDeserializedClass = JsonConvert.DeserializeObject<Device>(jsonString2);
+            return View(device);
+        }
 
-            return View(myDeserializedClass);
+        public async Task<IActionResult> DeleteDevice(string id)
+        {
+            var result = await httpClient.DeleteAsync($"Device/{id}");
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Import()
+        {
+
+            return PartialView();
+        }
+
+        [HttpPost]
+        public IActionResult Import(ImportFile fileObject)
+        {
+            var jsonAsString = new StringBuilder();
+            using (var reader = new StreamReader(fileObject.JsonFile.OpenReadStream()))
+            {
+                while (reader.Peek() >= 0) 
+                {
+                    jsonAsString.AppendLine(reader.ReadLine());
+                }
+            }
+            
+            //TODO: Geht ned
+            var result = httpClient.PostAsJsonAsync($"/Device/File", jsonAsString.ToString());
+
+            return RedirectToAction("Index");
         }
     }
 }
