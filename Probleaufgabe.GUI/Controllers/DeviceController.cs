@@ -26,8 +26,9 @@ namespace Probleaufgabe.GUI.Controllers
         public IActionResult Details()
         {
             string jsonString = "{\"id\":\"1glmLrTZqf9YZleN\",\"name\":\"S7-150009\",\"deviceTypeId\":\"Beweis\",\"failsafe\":true,\"tempMin\":0,\"tempMax\":60,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":true,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0}";
+            string jsonString2 = "{\"id\":\"9RLMugEpCVSeemZ5\",\"name\":\"ET 200SP\",\"deviceTypeId\":\"ET200_SP\",\"failsafe\":false,\"tempMin\":0,\"tempMax\":40,\"installationPosition\":\"horizontal\",\"insertInto19InchCabinet\":true,\"motionEnable\":true,\"siplusCatalog\":false,\"simaticCatalog\":true,\"rotationAxisNumber\":0,\"positionAxisNumber\":0,\"terminalElement\":true,\"advancedEnvironmentalConditions\":false}";
 
-            Device myDeserializedClass = JsonConvert.DeserializeObject<Device>(jsonString);
+            Device myDeserializedClass = JsonConvert.DeserializeObject<Device>(jsonString2);
 
             return View(myDeserializedClass);
         }
