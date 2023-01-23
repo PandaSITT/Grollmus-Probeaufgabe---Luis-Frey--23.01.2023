@@ -17,7 +17,6 @@ namespace Probleaufgabe.API.Controllers
             _databaseContext = databaseContext;
         }
 
-
         [HttpGet]
         public ActionResult<List<Device>> GetAll()
         {
@@ -74,8 +73,7 @@ namespace Probleaufgabe.API.Controllers
         {
             foreach (var device in jsonDevices.devices)
             {
-                //TODO: Error handeling
-                IActionResult result = Insert(device);
+                Insert(device);
             }
 
             return Ok(jsonDevices);

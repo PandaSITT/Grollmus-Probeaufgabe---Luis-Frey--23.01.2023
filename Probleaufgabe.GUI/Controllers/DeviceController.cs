@@ -16,7 +16,8 @@ namespace Probleaufgabe.GUI.Controllers
         {
             this.logger = logger;
             this.httpClient = httpClient;
-            //TODO: konfigurierbar machen
+            logger.LogInformation($"API BaseAdress: {httpClient.BaseAddress}");
+            //TODO: BaseAdress entfernen wenn es geht
             this.httpClient.BaseAddress = new Uri("https://localhost:7090/api/");
         }
 
@@ -59,7 +60,7 @@ namespace Probleaufgabe.GUI.Controllers
                 }
             }
             
-            //TODO: Geht ned
+            //TODO: Import geht ned
             var result = httpClient.PostAsJsonAsync($"/Device/File", jsonAsString.ToString());
 
             return RedirectToAction("Index");

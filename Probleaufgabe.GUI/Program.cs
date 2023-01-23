@@ -1,8 +1,15 @@
+using Probleaufgabe.GUI.Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient();
+
+var baseApiAdress = new Uri(builder.Configuration["AppSettings:ApiUrl"]);
+//TODO: BaseAdress Irgendwas geht ned
+builder.Services.AddHttpClient<DeviceController>("httpClient", c => {
+    c.BaseAddress = baseApiAdress;
+});
 
 var app = builder.Build();
 
