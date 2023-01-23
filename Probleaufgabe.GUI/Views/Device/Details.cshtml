@@ -1,0 +1,70 @@
+﻿@model Device
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<div>
+    <h4>@Html.DisplayFor(model => model.name)</h4>
+    <p>@Html.DisplayFor(model => model.deviceTypeId)</p>
+    <hr />
+    <dl class="row">
+        @{
+            //TODO: Liste daraus machen?
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.failsafe)
+        </dt>
+        <dd class="col-sm-10">
+            @AdditionalHtmlHelper.BoolToText(Model.failsafe)
+        </dd>
+
+        <dt class="col-sm-2">
+            Temperatur
+        </dt>
+        <dd class="col-sm-10">
+            @AdditionalHtmlHelper.TempRangeToString(Model.tempMin, Model.tempMax)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.installationPosition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.installationPosition)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.insertInto19InchCabinet)
+        </dt>
+        <dd class="col-sm-10">
+            @AdditionalHtmlHelper.BoolToText(Model.insertInto19InchCabinet)
+        </dd>
+
+        @if (Model.terminalElement.HasValue)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.terminalElement)
+            </dt>
+            <dd class="col-sm-10">
+                @AdditionalHtmlHelper.BoolToText(Model.terminalElement.Value)
+            </dd>
+        }
+
+        @if (Model.advancedEnvironmentalConditions.HasValue)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.advancedEnvironmentalConditions)
+            </dt>
+            <dd class="col-sm-10">
+                @AdditionalHtmlHelper.BoolToText(Model.advancedEnvironmentalConditions.Value)
+            </dd>
+        }
+
+    </dl>
+</div>
+<div>
+    @{
+        // TODO: Schöner machen
+    }
+    <a asp-action="Index">Back to List</a>
+</div>
