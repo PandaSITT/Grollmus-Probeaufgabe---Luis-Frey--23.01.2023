@@ -6,8 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 var baseApiAdress = new Uri(builder.Configuration["AppSettings:ApiUrl"]);
-//TODO: BaseAdress Irgendwas geht ned
-builder.Services.AddHttpClient<DeviceController>("httpClient", c => {
+builder.Services.AddHttpClient("ApiClient", c => {
     c.BaseAddress = baseApiAdress;
 });
 

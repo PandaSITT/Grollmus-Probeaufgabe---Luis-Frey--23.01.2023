@@ -13,13 +13,11 @@ namespace Probeaufgabe.GUI.Controllers
 
         private readonly HttpClient httpClient;
 
-        public DeviceController(ILogger<DeviceController> logger, HttpClient httpClient)
+        public DeviceController(ILogger<DeviceController> logger, IHttpClientFactory httpClientFactory)
         {
             this.logger = logger;
-            this.httpClient = httpClient;
+            this.httpClient = httpClientFactory.CreateClient("ApiClient");
             logger.LogInformation($"API BaseAdress: {httpClient.BaseAddress}");
-            //TODO: BaseAdress entfernen wenn es geht
-            this.httpClient.BaseAddress = new Uri("https://localhost:7090/api/");
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -43,9 +41,10 @@ namespace Probeaufgabe.GUI.Controllers
             return RedirectToAction("Index");
         }
 
-        public PartialViewResult Import()
+        [HttpGet]
+        public IActionResult Import()
         {
-            return PartialView("Import");
+            return PartialView("_Import");
         }
 
         [HttpPost]
@@ -60,7 +59,6 @@ namespace Probeaufgabe.GUI.Controllers
                 }
             }
 
-            //TODO: Macht asynchron wirklich sinn?
             var content = new StringContent(jsonAsString.ToString(), Encoding.UTF8, "application/json");
             var result = httpClient.PostAsync("Device/File", content);
 

@@ -3003,7 +3003,7 @@
 
     if (allowedPlacements.length === 0) {
       allowedPlacements = placements$1;
-    } // $FlowFixMe[incompatible-type]: Flow seems to have Probems with two array unions...
+    } // $FlowFixMe[incompatible-type]: Flow seems to have problems with two array unions...
 
 
     var overflows = allowedPlacements.reduce(function (acc, placement) {

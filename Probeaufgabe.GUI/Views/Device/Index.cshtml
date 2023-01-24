@@ -5,8 +5,10 @@
 }
 
 <div style="float: right;">
-    <a href="@Url.ActionLink("Import")" class="btn btn-dark">Import</a>
+    <button id="btnImport" class="btn btn-dark">Import</button>
 </div>
+
+<div id="importPartial"></div>
 
 <div>
     @if (Model.Count > 0)
@@ -30,3 +32,22 @@
         <p>Keine Geräte vorhanten.</p>
     }
 </div>
+
+<script>
+    $('#btnImport').on('click',
+        function (e) {
+            $.ajax({
+                url: '@Url.ActionLink("Import")',
+                type: 'GET',
+                cache: false,
+                async: false,
+                dataType: "html"
+            })
+            .done(function (result) {
+                    $('#importPartial').html(result);
+            }).fail(function (xhr) {
+                console.log('error : ' + xhr.status + ' - ' + xhr.statusText + ' - ' + xhr.responseText);
+            });
+            $("#importModal").modal('show');
+        });
+</script>
