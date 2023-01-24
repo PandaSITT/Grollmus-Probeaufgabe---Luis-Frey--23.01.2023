@@ -60,7 +60,7 @@ namespace Probeaufgabe.API.Controllers
         {
             if (_databaseContext.Devices.Any(q => q.id == device.id))
             {
-                return BadRequest("ID exestiert bereits");
+                return BadRequest($"Die ID '{device.id}' exestiert bereits");
             }
             _databaseContext.Devices.Add(device);
             _databaseContext.SaveChanges();
@@ -71,11 +71,34 @@ namespace Probeaufgabe.API.Controllers
         [Route("File")]
         public ActionResult InsertFile(JsonDevices jsonDevices)
         {
+            List<string> errors = new List<string>();
             foreach (var device in jsonDevices.devices)
             {
-                Insert(device);
+                try
+                {
+                    var result = (ObjectResult)Insert(device);
+                    if (result.StatusCode != 200)
+                    {
+                        errors.Add((string)result.Value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(ex.Message);
+                }
             }
 
+            if (errors.Any())
+            {
+                var errorMessage = $"Mindestens 1 Fehler ist aufgetreten: ";
+                foreach (var error in errors)
+                {
+                    errorMessage += $"\n\t{error}";
+                }
+
+                // OK, weil Fehler nerfig währen
+                return Ok(errorMessage);
+            }
             return Ok(jsonDevices);
         }
 
